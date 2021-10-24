@@ -13,7 +13,11 @@ jobs:
           uses: azure/login@v1
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
+        - name: Get version
+          id: vars
+          run: echo ::set-output name=version::$(cat VERSION)
+        - name: Test output
+          run: echo ${{ steps.vars.outputs.version }}
         - name: 'Build and push image'
           uses: azure/docker-login@v1
           with:
@@ -21,6 +25,7 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
+            version $(cat /home/runner/work/AWSSamExample/AWSSamExample/version.txt)
             docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
 
