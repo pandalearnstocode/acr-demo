@@ -13,6 +13,7 @@ jobs:
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
         - name: Get version
+          id: vars
           run: |
             python /home/runner/work/acr-demo/acr-demo/app/__init__.py > version.txt
             echo ::set-output name=version::$(cat /home/runner/work/acr-demo/acr-demo/version.txt)
