@@ -14,12 +14,10 @@ jobs:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
         - name: Get version
           id: getversion
-          run: echo ::set-output name=version::$(cat /home/runner/work/acr-demo/acr-demo/version.txt)
-               echo ::set-output name=version_py::$(`python /home/runner/work/acr-demo/acr-demo/app/__init__.py`)
+          run: echo ::set-output name=version::$(`python /home/runner/work/acr-demo/acr-demo/app/__init__.py`)
         - name: Test output
           run: |
             echo ${{ steps.getversion.outputs.version }}
-            echo ${{ steps.getversion.outputs.version_py }}
         - name: 'Build and push image'
           uses: azure/docker-login@v1
           with:
