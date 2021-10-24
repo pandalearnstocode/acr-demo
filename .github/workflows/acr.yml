@@ -29,6 +29,8 @@ jobs:
         - run: |
             docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ steps.getversion.outputs.version }}
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ steps.getversion.outputs.version }}
+            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:latest
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:latest
         - name: 'Deploy to Azure Container Instances'
           uses: 'azure/aci-deploy@v1'
           with:
