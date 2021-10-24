@@ -13,13 +13,13 @@ jobs:
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
         - name: Get version
-          id: vars
+          id: getversion
           run: echo ::set-output name=version::$(cat /home/runner/work/acr-demo/acr-demo/version.txt)
                echo ::set-output name=version_py::$(`python /home/runner/work/acr-demo/acr-demo/app/__init__.py`)
         - name: Test output
           run: |
-            echo ${{ steps.vars.outputs.version }}
-            echo ${{ steps.vars.outputs.version_py }}
+            echo ${{ steps.getversion.outputs.version }}
+            echo ${{ steps.getversion.outputs.version_py }}
         - name: 'Build and push image'
           uses: azure/docker-login@v1
           with:
@@ -27,8 +27,8 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
-            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:v${{ steps.vars.outputs.version }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:v${{ steps.vars.outputs.version }}
+            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:v${{ steps.getversion.outputs.version }}
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:v${{ steps.getversion.outputs.version }}
         - name: 'Deploy to Azure Container Instances'
           uses: 'azure/aci-deploy@v1'
           with:
