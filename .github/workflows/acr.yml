@@ -15,7 +15,7 @@ jobs:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
         - name: Get version
           id: vars
-          run: echo ::set-output name=version::$(cat VERSION)
+          run: echo ::set-output name=version::$(cat /home/runner/work/acr-demo/acr-demo/version.txt)
         - name: Test output
           run: echo ${{ steps.vars.outputs.version }}
         - name: 'Build and push image'
@@ -26,15 +26,15 @@ jobs:
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
             version $(cat /home/runner/work/acr-demo/acr-demo/version.txt)
-            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ version }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ version }}
+            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:v${{ steps.getversion.outputs.version }}
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:v${{ steps.getversion.outputs.version }}
 
         - name: 'Deploy to Azure Container Instances'
           uses: 'azure/aci-deploy@v1'
           with:
             resource-group: ${{ secrets.RESOURCE_GROUP }}
             dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
-            image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ version }}
+            image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:v${{ steps.getversion.outputs.version }}
             registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
             registry-username: ${{ secrets.REGISTRY_USERNAME }}
             registry-password: ${{ secrets.REGISTRY_PASSWORD }}
