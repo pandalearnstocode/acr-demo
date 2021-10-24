@@ -16,7 +16,7 @@ jobs:
           run: python /home/runner/work/acr-demo/acr-demo/app/__init__.py > VERSION
         - name: Get version
           id: vars
-          run: echo ::set-output name=version::$(cat VERSION)
+          run: echo ::set-output name=version::$(cat /home/runner/work/acr-demo/acr-demo/VERSION)
         - name: Test output
           run: echo ${{ steps.vars.outputs.version }}
 #         - name: 'Build and push image'
