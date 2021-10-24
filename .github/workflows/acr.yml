@@ -12,13 +12,14 @@ jobs:
           uses: azure/login@v1
           with:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
-        - name: Generate version
-          run: python /home/runner/work/acr-demo/acr-demo/app/__init__.py > VERSION
-        - name: Get version
-          id: vars
-          run: echo ::set-output name=version::$(cat VERSION)
-        - name: Test output
-          run: echo ${{ steps.vars.outputs.version }}
+        - name: Get docker image version
+          id: get_version
+          run:  |
+            MAJOR=$(cat VERSION | cut -d . -f 1)
+            MINOR=$(cat VERSION | cut -d . -f 2)
+            PATCH=$(cat VERSION | cut -d . -f 3)
+            VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+            echo "::set-output name=version::${VERSION}"
 #         - name: 'Build and push image'
 #           uses: azure/docker-login@v1
 #           with:
