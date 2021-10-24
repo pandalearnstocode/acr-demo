@@ -14,7 +14,7 @@ jobs:
             creds: ${{ secrets.AZURE_CREDENTIALS }}
         - name: Get version
           id: getversion
-          run: echo "::set-output name=version::$(`python /home/runner/work/acr-demo/acr-demo/app/__init__.py`)
+          run: echo "::set-output name=version::$(`python /home/runner/work/acr-demo/acr-demo/app/__init__.py`)"
         - name: Test output
           run: |
             echo ${{ steps.getversion.outputs.version }}
