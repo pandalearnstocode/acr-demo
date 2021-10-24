@@ -15,6 +15,7 @@ jobs:
         - name: Get docker image version
           id: getversion
           run:  |
+            python app/__init__.py > VERSION
             MAJOR=$(cat VERSION | cut -d . -f 1)
             MINOR=$(cat VERSION | cut -d . -f 2)
             PATCH=$(cat VERSION | cut -d . -f 3)
